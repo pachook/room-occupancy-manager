@@ -4,39 +4,38 @@ package pl.beusable.roomoccupancymanager.service;
 import org.springframework.stereotype.Service;
 import pl.beusable.roomoccupancymanager.domain.Guest;
 import pl.beusable.roomoccupancymanager.domain.OccupancyResponseDto;
+import pl.beusable.roomoccupancymanager.domain.Room;
 import pl.beusable.roomoccupancymanager.domain.RoomBookingResult;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class OccupancyManagerService {
     private final static double DEFAULT_PRICE = 100.00;
 
-    private static int findSplitIndex(Double[] arr, double target) {
-
-        int start = 0, end = arr.length - 1;
-        // Minimum size of the array should be 1
-        if (end == 0) return -1;
-        // If target lies beyond the max element, than the index of strictly smaller
-        // value than target should be (end - 1)
-        if (target > arr[end]) return end;
-
-        int ans = -1;
-        while (start <= end) {
-            int mid = (start + end) / 2;
-
-            // Move to the left side if the target is smaller
-            if (arr[mid] >= target) {
-                end = mid - 1;
-            }
-
-            // Move right side
-            else {
-                ans = mid;
-                start = mid + 1;
+    private static void bookRooms(int freeTargetRooms, int freeBackupRooms, Map<Boolean, List<Double>> premiumGuestMap, List<Room> targetRooms, boolean isPremiumRoom, boolean isTransferable) {
+        for (int i = 0; i < freeTargetRooms; i++) {
+            List<Double> targetGuests = premiumGuestMap.get(isPremiumRoom);
+            Room room = new Room();
+            if (!targetGuests.isEmpty()) {
+                room.setBookingPrice(targetGuests.get(0));
+                room.setRoomAvailable(false);
+                targetGuests.remove(0);
+                targetRooms.add(i, room);
+            } else {
+                List<Double> backupGuests = premiumGuestMap.get(!isPremiumRoom);
+                if (isTransferable && backupGuests.size() > freeBackupRooms) {
+                    room.setBookingPrice(backupGuests.get(0));
+                    room.setRoomAvailable(false);
+                    backupGuests.remove(0);
+                    targetRooms.add(i, room);
+                }
             }
         }
-        return ans;
     }
 
     public OccupancyResponseDto determineOccupancyDefaultPrice(int freePremiumRooms, int freeEconomyRooms, List<Guest> guests) {
@@ -45,51 +44,25 @@ public class OccupancyManagerService {
     }
 
     public OccupancyResponseDto determineOccupancy(int freePremiumRooms, int freeEconomyRooms, double limitPrice, List<Guest> guests) {
-        Double[] guestArraySorted = guests.stream()
+        List<Room> premiumRooms = new ArrayList<>(freePremiumRooms);
+        List<Room> economyRooms = new ArrayList<>(freeEconomyRooms);
+
+        Map<Boolean, List<Double>> premiumGuestMap = guests.stream()
                 .map(Guest::getDesiredPrice)
-                .sorted().toArray(Double[]::new);
+                .sorted(Comparator.reverseOrder())
+                .collect(Collectors.partitioningBy(price -> price >= limitPrice));
 
-        int splitIndex = findSplitIndex(guestArraySorted, limitPrice);
-
-        // Allocate guests to Premium and Economy rooms
-        int premiumRoomsOccupied;
-        double premiumRevenue = 0;
-        int economyRoomsOccupied;
-        double economyRevenue = 0;
-
-        int lastIndex = guestArraySorted.length - 1;
-
-        //check how many rooms are available
-        premiumRoomsOccupied = Math.min(lastIndex - splitIndex, freePremiumRooms);
-        economyRoomsOccupied = Math.min(splitIndex + 1, freeEconomyRooms);
-        //special case - transfer guest to higher class
-        if (freePremiumRooms + freeEconomyRooms < guestArraySorted.length && splitIndex + 1 > economyRoomsOccupied) {
-            premiumRoomsOccupied = freePremiumRooms;
-            economyRoomsOccupied = Math.min(lastIndex - freePremiumRooms, freeEconomyRooms);
-        }
-
-        //where economy guests end ?
-        int economyEndIndex = Math.min(lastIndex - premiumRoomsOccupied, splitIndex);
-
-        //calculate revenue
-        for (int i = 0; i < Math.max(premiumRoomsOccupied,economyRoomsOccupied); i++) {
-            if (i < premiumRoomsOccupied) {
-                premiumRevenue += guestArraySorted[lastIndex - i];
-            }
-            if (i < economyRoomsOccupied) {
-                economyRevenue += guestArraySorted[economyEndIndex - i];
-            }
-
-        }
+        bookRooms(freePremiumRooms, freeEconomyRooms, premiumGuestMap, premiumRooms, true, true);
+        bookRooms(freeEconomyRooms, freePremiumRooms, premiumGuestMap, economyRooms, false, false);
 
         return OccupancyResponseDto.builder()
                 .premiumRoomResult(RoomBookingResult.builder()
-                        .roomsOccupied(premiumRoomsOccupied)
-                        .revenue(premiumRevenue)
+                        .revenue(premiumRooms.stream().mapToDouble(Room::getBookingPrice).sum())
+                        .roomsOccupied(premiumRooms.stream().filter(room -> !room.isRoomAvailable()).toList().size())
                         .build())
                 .economyRoomResult(RoomBookingResult.builder()
-                        .roomsOccupied(economyRoomsOccupied)
-                        .revenue(economyRevenue)
+                        .revenue(economyRooms.stream().mapToDouble(Room::getBookingPrice).sum())
+                        .roomsOccupied(economyRooms.stream().filter(room -> !room.isRoomAvailable()).toList().size())
                         .build())
                 .build();
     }

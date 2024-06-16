@@ -43,15 +43,11 @@ class OccupancyManagerServiceTest {
 
     @Test
     void shouldBook7PremiumAnd1EconomyRoom() {
-        OccupancyResponseDto result = occupancyManagerService.determineOccupancyDefaultPrice(7, 1, getGuests());
+        OccupancyResponseDto result = occupancyManagerService.determineOccupancyDefaultPrice(7, 1, getGuests2());
         assertEquals(7, result.getPremiumRoomResult().getRoomsOccupied());
         assertEquals(1, result.getEconomyRoomResult().getRoomsOccupied());
-
-        assertEquals(1153.99, result.getPremiumRoomResult().getRevenue());
-        assertEquals(45.00, result.getEconomyRoomResult().getRevenue());
-        //TBC - below values are not possible
-        //assertEquals(1153, result.getPremiumRoomResult().getRevenue());
-        //assertEquals(45.99, result.getEconomyRoomResult().getRevenue());
+        assertEquals(1153, result.getPremiumRoomResult().getRevenue());
+        assertEquals(45.99, result.getEconomyRoomResult().getRevenue());
     }
 
     @Test
@@ -88,6 +84,13 @@ class OccupancyManagerServiceTest {
     private List<Guest> getGuests() {
         return List.of(new Guest(23.0), new Guest(45.0), new Guest(155.0),
                 new Guest(374.0), new Guest(22.0), new Guest(99.99),
+                new Guest(100.0), new Guest(101.0), new Guest(115.0),
+                new Guest(209.0));
+    }
+
+    private List<Guest> getGuests2() {
+        return List.of(new Guest(23.0), new Guest(45.99), new Guest(155.0),
+                new Guest(374.0), new Guest(22.0), new Guest(99.00),
                 new Guest(100.0), new Guest(101.0), new Guest(115.0),
                 new Guest(209.0));
     }
