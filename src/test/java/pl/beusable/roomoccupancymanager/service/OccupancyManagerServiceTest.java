@@ -15,7 +15,7 @@ class OccupancyManagerServiceTest {
 
     @Test
     void shouldBook3PremiumAnd3EconomyRoom() {
-        OccupancyResponseDto result = occupancyManagerService.determineOccupancy(3, 3, getGuests());
+        OccupancyResponseDto result = occupancyManagerService.determineOccupancyDefaultPrice(3, 3, getGuests());
         assertEquals(3, result.getPremiumRoomResult().getRoomsOccupied());
         assertEquals(738, result.getPremiumRoomResult().getRevenue());
         assertEquals(3, result.getEconomyRoomResult().getRoomsOccupied());
@@ -25,7 +25,7 @@ class OccupancyManagerServiceTest {
 
 //    @Test
     void shouldBook6PremiumAnd4EconomyRoom() {
-        OccupancyResponseDto result = occupancyManagerService.determineOccupancy(7, 5, getGuests());
+        OccupancyResponseDto result = occupancyManagerService.determineOccupancyDefaultPrice(7, 5, getGuests());
         assertEquals(6, result.getPremiumRoomResult().getRoomsOccupied());
         assertEquals(1054, result.getPremiumRoomResult().getRevenue());
         assertEquals(4, result.getEconomyRoomResult().getRoomsOccupied());
@@ -34,7 +34,7 @@ class OccupancyManagerServiceTest {
 
 //    @Test
     void shouldBook2PremiumAnd4EconomyRoom() {
-        OccupancyResponseDto result = occupancyManagerService.determineOccupancy(2, 7, getGuests());
+        OccupancyResponseDto result = occupancyManagerService.determineOccupancyDefaultPrice(2, 7, getGuests());
         assertEquals(2, result.getPremiumRoomResult().getRoomsOccupied());
         assertEquals(583, result.getPremiumRoomResult().getRevenue());
         assertEquals(4, result.getEconomyRoomResult().getRoomsOccupied());
@@ -43,7 +43,7 @@ class OccupancyManagerServiceTest {
 
 //    @Test
     void shouldBook7PremiumAnd1EconomyRoom() {
-        OccupancyResponseDto result = occupancyManagerService.determineOccupancy(7, 1, getGuests());
+        OccupancyResponseDto result = occupancyManagerService.determineOccupancyDefaultPrice(7, 1, getGuests());
         assertEquals(7, result.getPremiumRoomResult().getRoomsOccupied());
         assertEquals(1153, result.getPremiumRoomResult().getRevenue());
         assertEquals(1, result.getEconomyRoomResult().getRoomsOccupied());

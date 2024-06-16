@@ -10,8 +10,15 @@ import java.util.List;
 
 @Service
 public class OccupancyManagerService {
+    private final static double DEFAULT_PRICE = 100.00;
 
-    public OccupancyResponseDto determineOccupancy(int freePremiumRooms, int freeEconomyRooms, List<Guest> guests) {
+    public OccupancyResponseDto determineOccupancyDefaultPrice(int freePremiumRooms, int freeEconomyRooms, List<Guest> guests) {
+
+        return determineOccupancy(freePremiumRooms, freeEconomyRooms, DEFAULT_PRICE, guests);
+    }
+
+    public OccupancyResponseDto determineOccupancy(int freePremiumRooms, int freeEconomyRooms, double limitPrice, List<Guest> guests) {
+
 
         return OccupancyResponseDto.builder()
                 .premiumRoomResult(RoomBookingResult.builder()
