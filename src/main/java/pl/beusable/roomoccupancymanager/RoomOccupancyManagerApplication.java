@@ -1,4 +1,4 @@
-package pl.beusable.room_occupancy_manager;
+package pl.beusable.roomoccupancymanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
