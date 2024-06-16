@@ -23,7 +23,7 @@ class OccupancyManagerServiceTest {
     }
 
 
-//    @Test
+    @Test
     void shouldBook6PremiumAnd4EconomyRoom() {
         OccupancyResponseDto result = occupancyManagerService.determineOccupancyDefaultPrice(7, 5, getGuests());
         assertEquals(6, result.getPremiumRoomResult().getRoomsOccupied());
@@ -32,7 +32,7 @@ class OccupancyManagerServiceTest {
         assertEquals(189.99, result.getEconomyRoomResult().getRevenue());
     }
 
-//    @Test
+    @Test
     void shouldBook2PremiumAnd4EconomyRoom() {
         OccupancyResponseDto result = occupancyManagerService.determineOccupancyDefaultPrice(2, 7, getGuests());
         assertEquals(2, result.getPremiumRoomResult().getRoomsOccupied());
