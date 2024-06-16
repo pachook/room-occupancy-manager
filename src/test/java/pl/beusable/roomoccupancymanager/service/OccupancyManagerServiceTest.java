@@ -41,14 +41,37 @@ class OccupancyManagerServiceTest {
         assertEquals(189.99, result.getEconomyRoomResult().getRevenue());
     }
 
-//    @Test
+    @Test
     void shouldBook7PremiumAnd1EconomyRoom() {
         OccupancyResponseDto result = occupancyManagerService.determineOccupancyDefaultPrice(7, 1, getGuests());
         assertEquals(7, result.getPremiumRoomResult().getRoomsOccupied());
-        assertEquals(1153, result.getPremiumRoomResult().getRevenue());
         assertEquals(1, result.getEconomyRoomResult().getRoomsOccupied());
-        assertEquals(45.99, result.getEconomyRoomResult().getRevenue());
+
+        assertEquals(1153.99, result.getPremiumRoomResult().getRevenue());
+        assertEquals(45.00, result.getEconomyRoomResult().getRevenue());
+        //TBC - below values are not possible
+        //assertEquals(1153, result.getPremiumRoomResult().getRevenue());
+        //assertEquals(45.99, result.getEconomyRoomResult().getRevenue());
     }
+
+    @Test
+    void shouldBookPremiumOnly() {
+        OccupancyResponseDto result = occupancyManagerService.determineOccupancyDefaultPrice(7, 1, List.of(new Guest(101), new Guest(102)));
+        assertEquals(2, result.getPremiumRoomResult().getRoomsOccupied());
+        assertEquals(203, result.getPremiumRoomResult().getRevenue());
+        assertEquals(0, result.getEconomyRoomResult().getRoomsOccupied());
+        assertEquals(0.0, result.getEconomyRoomResult().getRevenue());
+    }
+
+    @Test
+    void shouldBookEconomyOnly() {
+        OccupancyResponseDto result = occupancyManagerService.determineOccupancyDefaultPrice(3, 6, List.of(new Guest(80), new Guest(20)));
+        assertEquals(0, result.getPremiumRoomResult().getRoomsOccupied());
+        assertEquals(0, result.getPremiumRoomResult().getRevenue());
+        assertEquals(2, result.getEconomyRoomResult().getRoomsOccupied());
+        assertEquals(100.0, result.getEconomyRoomResult().getRevenue());
+    }
+
 
     private List<Guest> getGuests() {
         return List.of(new Guest(23.0), new Guest(45.0), new Guest(155.0),
