@@ -72,12 +72,14 @@ public class OccupancyManagerService {
         int economyEndIndex = Math.min(lastIndex - premiumRoomsOccupied, splitIndex);
 
         //calculate revenue
-        for (int i = 0; i < premiumRoomsOccupied; i++) {
-            premiumRevenue += guestArraySorted[lastIndex - i];
-        }
+        for (int i = 0; i < Math.max(premiumRoomsOccupied,economyRoomsOccupied); i++) {
+            if (i < premiumRoomsOccupied) {
+                premiumRevenue += guestArraySorted[lastIndex - i];
+            }
+            if (i < economyRoomsOccupied) {
+                economyRevenue += guestArraySorted[economyEndIndex - i];
+            }
 
-        for (int i = 0; i < economyRoomsOccupied; i++) {
-            economyRevenue += guestArraySorted[economyEndIndex - i];
         }
 
         return OccupancyResponseDto.builder()
