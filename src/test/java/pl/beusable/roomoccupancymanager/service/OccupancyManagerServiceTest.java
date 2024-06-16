@@ -56,7 +56,8 @@ class OccupancyManagerServiceTest {
 
     @Test
     void shouldBookPremiumOnly() {
-        OccupancyResponseDto result = occupancyManagerService.determineOccupancyDefaultPrice(7, 1, List.of(new Guest(101), new Guest(102)));
+        OccupancyResponseDto result = occupancyManagerService.determineOccupancyDefaultPrice(7, 1,
+                List.of(new Guest(101), new Guest(102)));
         assertEquals(2, result.getPremiumRoomResult().getRoomsOccupied());
         assertEquals(203, result.getPremiumRoomResult().getRevenue());
         assertEquals(0, result.getEconomyRoomResult().getRoomsOccupied());
@@ -64,8 +65,19 @@ class OccupancyManagerServiceTest {
     }
 
     @Test
+    void shouldBook1PremiumOnly() {
+        OccupancyResponseDto result = occupancyManagerService.determineOccupancyDefaultPrice(1, 1,
+                List.of(new Guest(101), new Guest(102)));
+        assertEquals(1, result.getPremiumRoomResult().getRoomsOccupied());
+        assertEquals(102, result.getPremiumRoomResult().getRevenue());
+        assertEquals(0, result.getEconomyRoomResult().getRoomsOccupied());
+        assertEquals(0.0, result.getEconomyRoomResult().getRevenue());
+    }
+
+    @Test
     void shouldBookEconomyOnly() {
-        OccupancyResponseDto result = occupancyManagerService.determineOccupancyDefaultPrice(3, 6, List.of(new Guest(80), new Guest(20)));
+        OccupancyResponseDto result = occupancyManagerService.determineOccupancyDefaultPrice(3, 6,
+                List.of(new Guest(80), new Guest(20)));
         assertEquals(0, result.getPremiumRoomResult().getRoomsOccupied());
         assertEquals(0, result.getPremiumRoomResult().getRevenue());
         assertEquals(2, result.getEconomyRoomResult().getRoomsOccupied());
