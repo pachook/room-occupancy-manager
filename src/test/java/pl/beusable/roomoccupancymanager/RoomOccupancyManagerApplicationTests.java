@@ -1,4 +1,4 @@
-package pl.beusable.room_occupancy_manager;
+package pl.beusable.roomoccupancymanager;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
