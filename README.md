@@ -61,13 +61,6 @@ The algorithm uses a binary search to find the split point between guests willin
         Guests willing to pay less than EUR 100 are allocated to Economy rooms.
         If Economy rooms are full, these guests are then considered for Premium rooms.
 
-### Code Structure
-
-- Guest.java: Represents a guest and their willingness to pay.
-- BookingResult.java: Represents the result of the room allocation process.
-- RoomOccupancyManager.java: Contains the main logic for room allocation, including sorting, binary search, and allocation.
-- RoomOccupancyController.java: Exposes a REST API to input room availability and get the booking results.
-
 ### Project Structure
 
 - src/main/java: Contains the main application code.
