@@ -48,9 +48,10 @@ This is a room occupancy optimization tool for hotel clients. It assigns guests 
 ### Sorting and Allocation
 
 The guests are sorted by their willingness to pay in order. This allows the algorithm to efficiently allocate guests to rooms by their payment capability.
-### Binary Search for Splitting
+### Iterative approach
 
-The algorithm uses a binary search to find the split point between guests willing to pay EUR 100 or more and those who are willing to pay less. The findSplitIndex method finds the first guest willing to pay less than EUR 100. This binary search ensures that the algorithm runs efficiently even for larger datasets.
+The algorithm uses splits between guests willing to pay EUR 100 or more and those who are willing to pay less. Guests are sortde in descending order.
+Then it tries to match Room with Guest until there are no guests available.
 ### Allocation Logic
 
 - Premium Rooms Allocation:
@@ -60,13 +61,6 @@ The algorithm uses a binary search to find the split point between guests willin
 - Economy Rooms Allocation:
         Guests willing to pay less than EUR 100 are allocated to Economy rooms.
         If Economy rooms are full, these guests are then considered for Premium rooms.
-
-### Code Structure
-
-- Guest.java: Represents a guest and their willingness to pay.
-- BookingResult.java: Represents the result of the room allocation process.
-- RoomOccupancyManager.java: Contains the main logic for room allocation, including sorting, binary search, and allocation.
-- RoomOccupancyController.java: Exposes a REST API to input room availability and get the booking results.
 
 ### Project Structure
 
@@ -80,7 +74,8 @@ The algorithm uses a binary search to find the split point between guests willin
 - OccupancyManagerApplication: Main class for running the Spring Boot application.
 - OccupancyManagerController: REST controller handling the API endpoints.
 - OccupancyManagerService: Service layer containing business logic for room allocation.
-- Guest: Model class representing a guest with their willingness to pay.    
+- Guest: Model class representing a guest with their willingness to pay.
+- Room: Model class representing a room with attributes such as type and price.    
 
 ### Build and Dependency Management
 
