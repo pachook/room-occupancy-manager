@@ -30,8 +30,7 @@ This is a room occupancy optimization tool for hotel clients. It assigns guests 
     "guests" : [23.0, 45.0, 155.0, 374.0, 22.0, 99.99, 100.0, 101.0, 115.0, 209.0]
   }
 
-
-Example response:
+ - Example response:
   ```json
  {
     "premiumRoomResult": {
@@ -43,3 +42,28 @@ Example response:
         "revenue": 167.99
     }
  }
+```
+
+## Technical notes
+### Sorting and Allocation
+
+The guests are sorted by their willingness to pay in order. This allows the algorithm to efficiently allocate guests to rooms by their payment capability.
+### Binary Search for Splitting
+
+The algorithm uses a binary search to find the split point between guests willing to pay EUR 100 or more and those who are willing to pay less. The findSplitIndex method finds the first guest willing to pay less than EUR 100. This binary search ensures that the algorithm runs efficiently even for larger datasets.
+### Allocation Logic
+
+- Premium Rooms Allocation:
+        Guests willing to pay EUR 100 or more are allocated to Premium rooms first.
+        Guests willing to pay less than EUR 100 are allocated to Premium rooms if there are no free Economy rooms left.
+
+- Economy Rooms Allocation:
+        Guests willing to pay less than EUR 100 are allocated to Economy rooms.
+        If Economy rooms are full, these guests are then considered for Premium rooms.
+
+### Code Structure
+
+- Guest.java: Represents a guest and their willingness to pay.
+- BookingResult.java: Represents the result of the room allocation process.
+- RoomOccupancyManager.java: Contains the main logic for room allocation, including sorting, binary search, and allocation.
+- RoomOccupancyController.java: Exposes a REST API to input room availability and get the booking results.
