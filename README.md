@@ -67,3 +67,38 @@ The algorithm uses a binary search to find the split point between guests willin
 - BookingResult.java: Represents the result of the room allocation process.
 - RoomOccupancyManager.java: Contains the main logic for room allocation, including sorting, binary search, and allocation.
 - RoomOccupancyController.java: Exposes a REST API to input room availability and get the booking results.
+
+### Project Structure
+
+- src/main/java: Contains the main application code.
+- src/test/java: Contains the test cases for the application.
+- src/main/resources: Includes configuration files and sample data.
+- pom.xml: Maven configuration file for managing dependencies and build lifecycle.
+
+### Key Classes and Functions
+
+- OccupancyManagerApplication: Main class for running the Spring Boot application.
+- OccupancyManagerController: REST controller handling the API endpoints.
+- OccupancyManagerService: Service layer containing business logic for room allocation.
+- Guest: Model class representing a guest with their willingness to pay.    
+
+### Build and Dependency Management
+
+- Maven: Used for build automation and dependency management. Key dependencies include:
+  - Spring Boot Starter Web: For creating RESTful web services.
+  - Spring Boot Starter Test: For testing the application.
+  - Lombok: For reducing boilerplate code (e.g., getters, setters, constructors).
+
+### Configuration
+
+- application.properties: Configuration file for setting application-specific properties, such as server port and logging levels.
+
+### Deployment
+
+- The application can be packaged into a JAR file using mvn clean package and deployed on any server supporting Java.
+
+### Testing
+
+- Unit tests are written using JUnit and Spring Boot Test framework.    
+
+
